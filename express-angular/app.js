@@ -4,6 +4,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var knexLogger = require('knex-logger');
+
+var services = require('./services');
+var knex = services.knex;
+
 var routes = require('./routes/index');
 var users = require('./routes/user');
 
@@ -18,6 +23,11 @@ app.locals.ENV_DEVELOPMENT = env == 'development';
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
+// User for loggin knex queries, used only in development
+// if (app.get('env') === 'development') {
+//   app.use(knexLogger(knex));
+// }
 
 // app.use(favicon(__dirname + '/public/img/favicon.ico'));
 app.use(logger('dev'));

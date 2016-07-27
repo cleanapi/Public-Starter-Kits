@@ -1,6 +1,6 @@
 require('dotenv').config({silent: true});
 
-var knex = var require('knex')({
+var knex = require('knex')({
   client: 'postgres',
   connection: {
     host: process.env.DB_HOST,

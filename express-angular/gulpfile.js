@@ -18,7 +18,10 @@ var config = {
 
 config = _.extend(config, {
   bowerDir: config.appDir + '/bower_components',
-  bootstrapDir: config.appDir + '/bower_components/bootstrap-sass',
+  bootstrapDir: config.appDir + '/bower_components/bootstrap-sass'
+});
+
+config = _.extend(config, {
   fontList: [
     config.appDir + '/fonts/**/*',
     config.bootstrapDir + '/assets/fonts/**/*'
@@ -166,7 +169,8 @@ gulp.task('develop', function () {
     script: 'bin/www',
     ext: 'js jade coffee',
     stdout: false,
-    ignore: [config.appDir + '/**']
+    ignore: [config.appDir + '/**'],
+    nodeArgs: ['--debug']
   }).on('readable', function () {
     this.stdout.on('data', function (chunk) {
       if(/^Express server listening on port/.test(chunk)){
