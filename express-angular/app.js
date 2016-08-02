@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var knexLogger = require('knex-logger');
 
 var services = require('./services');
-var knex = services.knex;
+var knex = services.bookshelf.knex;
 
 var routes = require('./routes/index');
 var users = require('./routes/user');
@@ -15,6 +15,8 @@ var users = require('./routes/user');
 require('dotenv').config({silent: true});
 
 var app = express();
+
+var wrap = services.wrap(app, process.env.WRAP_API_KEY);
 
 var env = process.env.NODE_ENV || 'development';
 app.locals.ENV = env;

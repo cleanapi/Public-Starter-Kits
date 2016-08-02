@@ -1,3 +1,4 @@
 module.exports = {
-  bookshelf: require('./bookshelf')
+  bookshelf: require('./bookshelf'),
+  wrap: require('./wrap')
 };

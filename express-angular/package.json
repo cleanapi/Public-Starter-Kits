@@ -19,7 +19,7 @@
     "morgan": "^1.6.1",
     "pg": "^6.0.3",
     "serve-favicon": "^2.3.0",
-    "wrap-api-client": "wrapmedia/api-client"
+    "wrap-api": "^1.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.11.4",

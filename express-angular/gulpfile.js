@@ -45,8 +45,9 @@ var bundler = {
     });
     b.transform(envify({
       _: 'purge',
-      "API_KEY": process.env.API_KEY,
-      "BASE_URL": process.env.BASE_URL
+      "WRAP_API_KEY": process.env.WRAP_API_KEY,
+      "WRAP_BASE_URL": process.env.WRAP_BASE_URL,
+      'WRAP_APP_URL': process.env.WRAP_APP_URL
     }));
     this.w = watchify(b);
   },
