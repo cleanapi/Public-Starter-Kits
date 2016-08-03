@@ -16,6 +16,11 @@ To run the application in development mode run:
 
 Open the browser in the localhost:5000
 
+## Create database
+
+To create database run
+`gulp database:create`
+
 ## Model Migration
 To migrate the models run
 
@@ -24,3 +29,4 @@ To migrate the models run
 To add additional models run
 
 `knex migrate:make <model>`
+
