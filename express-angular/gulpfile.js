@@ -10,9 +10,11 @@ var envify     = require('envify/custom');
 var babel      = require('babelify');
 
 require('dotenv').config({silent: true});
+var env = process.env.NODE_ENV || 'development';
 
 var config = {
-  publicDir: './public',
+  serverDir: './server',
+  publicDir: './server/public',
   appDir: './client'
 }
 
@@ -140,6 +142,39 @@ gulp.task('minify:css', function() {
     .pipe($.size());
 });
 
+gulp.task('database:create', function(done) {
+  var config = require('./knexfile.js');
+  var knex   = require('knex')({
+    client: config[env].client,
+    connection: {
+      host: config[env].connection.host,
+      user: config[env].connection.user,
+      password: config[env].connection.password
+    }
+  });
+  knex.raw('CREATE DATABASE ' + config[env].connection.database);
+  done();
+});
+
+var dbTask = $.db({
+  dialect: 'postgres',
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST
+});
+console.log(dbTask);
+gulp.task('db:create', dbTask.create(process.env.DB_DATABASE));
+gulp.task('db:drop', dbTask.drop(process.env.DB_DATABASE));
+
+// gulp.task('babel', function() {
+//   return gulp.src([
+//     './app.js',
+//     './views/**/*'
+//   ])
+//   .pipe(babel())
+//   .pipe(gulp.dest('./server'));
+// });
+
 gulp.task('minify', ['minify:js', 'minify:css']);
 
 gulp.task('clean', del.bind(null, 'dist'));
@@ -171,7 +206,8 @@ gulp.task('develop', function () {
     ext: 'js jade coffee',
     stdout: false,
     ignore: [config.appDir + '/**'],
-    nodeArgs: ['--debug']
+    nodeArgs: ['--debug'],
+    // tasks: ['babel']
   }).on('readable', function () {
     this.stdout.on('data', function (chunk) {
       if(/^Express server listening on port/.test(chunk)){

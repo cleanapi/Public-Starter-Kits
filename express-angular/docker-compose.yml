@@ -1,0 +1,23 @@
+db:
+  image: postgres
+web:
+  dockerfile: Dockerfile
+  build: .
+  links:
+    - db
+  environment:
+    - PORT=9000
+    - NODE_ENV=development
+    - DB_HOST=db
+    - DB_USER=postgres
+    - DB_PASSWORD=postgres
+    - DB_DATABASE=vmware
+  volumes:
+    - .:/home/app/project
+    - /home/app/project/node_modules
+    - /home/app/project/client/bower_components
+  ports:
+    - '7000:80'
+    - '443:443'
+    - '9000:9000'
+    - '35729:35729'
