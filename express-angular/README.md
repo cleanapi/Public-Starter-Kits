@@ -8,6 +8,8 @@ Before starting using docker make sure you have installed docker before. https:/
 
 You need to copy *.env.example* file into *.env* file and add the required information you have available for the project.
 
+`cp .env.example .env`
+
 ### Building the image
 
 Clone the project and run the following command:
@@ -71,4 +73,3 @@ To migrate the models run
 To add additional models run
 
 `knex migrate:make <model>`
-
