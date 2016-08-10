@@ -55,6 +55,8 @@ VERSION=$BRANCH-$SHA1
 DOCKERRUN_TMP=$DOCKERRUN_FILE.tmp
 ZIP=$VERSION.gz
 
+git pull
+
 # aws configure set default.region $AWS_REGION
 #
 # Authenticate against our Docker registry
