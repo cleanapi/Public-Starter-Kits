@@ -43,3 +43,8 @@ jspm_packages
 dist
 public
 app/bower_components
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

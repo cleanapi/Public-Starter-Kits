@@ -14,13 +14,14 @@ RUN apt-get install -y \
 
 ENV HOME=/home/app
 
-COPY package.json bower.json .bowerrc $HOME/project/
+COPY package.json bower.json .bowerrc .env $HOME/project/
 RUN chown -R app:app $HOME/*
 
 USER app
 WORKDIR /home/app/project
 RUN npm set progress=false
 RUN npm install
+RUN npm set progress=true
 
 USER root
 COPY . $HOME/project
