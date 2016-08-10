@@ -23,19 +23,26 @@ fi
 if [ ! -z "$AWS_ACCOUNT_ID" ]; then
   AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID
 else
-  AWS_ACCOUNT_ID=885535109371
+  echo "AWS_ACCOUNT_ID missing. \nYou need to provide your AWS account ID without dashes"
+  exit 1
 fi
 
 if [ ! -z "$PROJECT_NAME" ]; then
   NAME=$PROJECT_NAME
 else
-  NAME=express-angular
+  echo "PROJECT_NAME missing. \n Please include PROJECT_NAME in the command"
+  exit 1
 fi
 
 if [ ! -z "$S3_BUCKET" ]; then
   EB_BUCKET=$S3_BUCKET
 else
-  EB_BUCKET=solutions
+  EB_BUCKET=docker-beanstalk
+fi
+
+if [ -z "$GIT_REPO" ]; then
+  echo "GIT_REPO missing. \n Please include GIT_REPO in the command"
+  exit 1
 fi
 
 if [ ! -z "$DOCKERRUN_FILE" ]; then
@@ -46,6 +53,7 @@ fi
 
 VERSION=$BRANCH-$SHA1
 DOCKERRUN_TMP=$DOCKERRUN_FILE.tmp
+ZIP=$VERSION.gz
 
 # aws configure set default.region $AWS_REGION
 #
@@ -68,16 +76,20 @@ sed -i='' "s/<TAG>/$VERSION/" $DOCKERRUN_TMP
 # Replace the <AWS_REGION> with the AWS region
 sed -i='' "s/<AWS_REGION>/$AWS_REGION/" $DOCKERRUN_TMP
 # Replace the <GIT_REPO> with the git repository
-sed -i='' "s/<GIT_REPO>/$GIT_REPO/" $DOCKERRUN_TMP
+sed -i='' "s|<GIT_REPO>|$GIT_REPO|" $DOCKERRUN_TMP
 
-aws s3 cp $DOCKERRUN_TMP s3://$EB_BUCKET/$DOCKERRUN_TMP
+# Zip up the Dockerrun file (feel free to zip up an .ebextensions directory with it)
+gzip < "$DOCKERRUN_TMP" > $ZIP
+
+aws s3 cp $DOCKERRUN_TMP s3://$EB_BUCKET/$ZIP
 
 # Create a new application version with the zipped up Dockerrun file
 aws elasticbeanstalk create-application-version --application-name $NAME-application \
-    --version-label $VERSION --source-bundle S3Bucket=$EB_BUCKET,S3Key=$DOCKERRUN_TMP
+    --version-label $VERSION --source-bundle S3Bucket=$EB_BUCKET,S3Key=$ZIP
 
 # Update the environment to use the new application version
 aws elasticbeanstalk update-environment --environment-name $NAME \
       --version-label $VERSION
 
+rm $ZIP
 rm $DOCKERRUN_TMP
